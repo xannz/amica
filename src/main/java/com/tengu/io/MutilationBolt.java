@@ -98,9 +98,9 @@ public class MutilationBolt extends BaseBasicBolt {
              */
             String json;
             if (response.equals("201")) {
-                json = "{ \"id\": \"" + id + "\", \"flag\": \"mutilation\" }";
+                json = "{ \"id\": \"" + id + "\", \"flag\": \"mutilation\", \"source\": \"mutilation\" }";
             }else{
-                json = "{ \"id\": \""+ id +"\", \"flag\": \"none\" }";
+                json = "{ \"id\": \""+ id +"\", \"flag\": \"none\", \"source\": \"mutilation\" }";
             }
             System.out.println(json);
             boc.emit(new Values(json));

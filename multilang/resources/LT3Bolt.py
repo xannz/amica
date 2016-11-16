@@ -1,8 +1,8 @@
 import storm
 import sys
-import simplejson
+import json as simplejson
 sys.path.append('/tmp/Amica/LT3/amica_demo/suicide')
-import pipeline import suicidality_pipeline as sp
+from pipeline import suicidality_pipeline as sp
 
 class LT3Bolt(storm.BasicBolt):
 
@@ -19,6 +19,7 @@ class LT3Bolt(storm.BasicBolt):
 		json_string = str(json_string).replace("'", '"')
 		data = simplejson.loads(json_string)
 		data['id'] = str(id_tweet)
+		data['source'] = "LT3"
 
 
 		if(data['relevance_boolean'] == 1 and data['severity_boolean'] == 1):

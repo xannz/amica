@@ -1,0 +1,12 @@
+/home/sander/amica/projects/Amica/src/main/java/com/tengu/io/DownloadImageBolt.java
+/home/sander/amica/projects/Amica/src/main/java/com/tengu/io/MutilationBolt.java
+/home/sander/amica/projects/Amica/src/main/java/com/tengu/io/ImageSpout.java
+/home/sander/amica/projects/Amica/src/main/java/com/tengu/io/Data.java
+/home/sander/amica/projects/Amica/src/main/java/com/tengu/io/NudityBolt.java
+/home/sander/amica/projects/Amica/src/main/java/com/tengu/io/AmicaKafka.java
+/home/sander/amica/projects/Amica/src/main/java/com/tengu/io/LT3Bolt.java
+/home/sander/amica/projects/Amica/src/main/java/com/tengu/io/KafkaBoltKeyValueScheme.java
+/home/sander/amica/projects/Amica/src/main/java/com/tengu/io/MongoBolt.java
+/home/sander/amica/projects/Amica/src/main/java/com/tengu/io/PreProcessingBolt.java
+/home/sander/amica/projects/Amica/src/main/java/com/tengu/io/Tweet.java
+/home/sander/amica/projects/Amica/src/main/java/com/tengu/io/Amica.java
