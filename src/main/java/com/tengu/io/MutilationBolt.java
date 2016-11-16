@@ -76,9 +76,10 @@ public class MutilationBolt extends BaseBasicBolt {
         try {
             BufferedImage img = ImageIO.read(new ByteArrayInputStream(tuple.getBinaryByField("image")));
             String id = tuple.getStringByField("id");
+            String extension = tuple.getStringByField("imageExtension");
 
             System.out.println("Creating image");
-            String writeFilePath = "/tmp/Amica/Mutilation/ImageInterpretation2/results/tempMutilation.jpg";
+            String writeFilePath = "/tmp/Amica/Mutilation/ImageInterpretation2/results/tempMutilation."+ extension;
             File writeFile = new File(writeFilePath);
             ImageIO.write(img, "jpg", writeFile);
             System.out.println("Image created");

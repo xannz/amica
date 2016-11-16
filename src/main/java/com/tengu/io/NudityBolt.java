@@ -96,8 +96,9 @@ public class NudityBolt extends BaseBasicBolt {
         try {
             BufferedImage img = ImageIO.read(new ByteArrayInputStream(tuple.getBinaryByField("image")));
             String id = tuple.getStringByField("id");
+            String extension = tuple.getStringByField("imageExtension");
 
-            String writeFilePath = "/tmp/Amica/Nudity/ImageInterpretation/results/tempNudity.jpg";
+            String writeFilePath = "/tmp/Amica/Nudity/ImageInterpretation/results/tempNudity." + extension;
             File writeFile = new File(writeFilePath);
             ImageIO.write(img, "jpg", writeFile);
 

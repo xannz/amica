@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 public class PreProcessingBolt extends BaseBasicBolt{
 
     public void declareOutputFields(OutputFieldsDeclarer ofd) {
-        ofd.declareStream("imageStream", new Fields("id", "imageURL"));
+        ofd.declareStream("imageStream", new Fields("id", "imageURL", "imageExtension"));
         ofd.declareStream("textStream", new Fields("id", "text"));
     }
 
@@ -44,9 +44,15 @@ public class PreProcessingBolt extends BaseBasicBolt{
                 //if yes, emit url and id                
                 for(String s : t.getMedia()){
                     //if(s.matches(".*jpg$") || s.matches(".*png$") || s.matches(".*bmp$") || s.matches(".*jpeg$")){
-                    if(s.matches(".*jpg$")){
-                        System.out.println("Sending tuple to downloadbolt");
-                        boc.emit("imageStream", new Values(Long.toString(t.getId()), s));
+                    if(s.matches(".*jpg$") || s.matches(".*JPG$")){
+                        //System.out.println("Sending tuple to downloadbolt");
+                        boc.emit("imageStream", new Values(Long.toString(t.getId()), s, "jpg"));
+                    }else if(s.matches(".*png") || s.matches(".*PNG")){
+                        boc.emit("imageStream", new Values(Long.toString(t.getId()), s, "png"));
+                    }else if(s.matches(".*bmp$") || s.matches(".*BMP$")){
+                        boc.emit("imageStream", new Values(Long.toString(t.getId()), s, "bmp"));
+                    }else if(s.matches(".*jpeg$") || s.matches(".*JPEG$")){
+                        boc.emit("imageStream", new Values(Long.toString(t.getId()), s, "jpeg"));
                     }
                 }                
             }
