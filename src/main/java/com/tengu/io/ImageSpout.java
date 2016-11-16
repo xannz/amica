@@ -39,25 +39,25 @@ public class ImageSpout extends BaseRichSpout {
 
     public void declareOutputFields(OutputFieldsDeclarer ofd) {
         //ofd.declare(new Fields("image", "id"));
-        ofd.declareStream("images", new Fields("image", "id"));
+        ofd.declare(new Fields("message"));
     }
 
     public void nextTuple() {
         Utils.sleep(3000); //Add artificial delay
-        try {
+        //try {
             System.out.println("Reading image");
             File fi = new File(imagePath + counter + ".jpg");
             
-            if (fi.exists() && !fi.isDirectory()) {
-                byte[] fileContent = Files.readAllBytes(fi.toPath());
-                counter++;
-                System.out.println("Emitting byte array(" + counter + ")");
-                _collector.emit("images" ,new Values(fileContent, "0000001"));
-            }
+            //if (fi.exists() && !fi.isDirectory()) {
+                //byte[] fileContent = Files.readAllBytes(fi.toPath());
+                //counter++;
+                //System.out.println("Emitting byte array(" + counter + ")");
+                _collector.emit(new Values("{\"id\":795579924908273665,\"text\":\"#Calpe Guardia Civil verijdelt 2 zelfmoordpogingen https://t.co/32tn93XAiG\",\"createdAt\":1478516009000,\"language\":\"nl\",\"media\":[\"http://i.imgur.com/vGUbrPo.jpg\"],\"user\":\"Herwig Waterschoot\"}"));
+            //}
 
-        } catch (IOException ex) {
-            Logger.getLogger(ImageSpout.class.getName()).log(Level.SEVERE, null, ex);
-        }
+       // } catch (IOException ex) {
+        //    Logger.getLogger(ImageSpout.class.getName()).log(Level.SEVERE, null, ex);
+        //}
     }
 
 }

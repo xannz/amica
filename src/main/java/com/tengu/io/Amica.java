@@ -26,8 +26,10 @@ public class Amica {
 
         TopologyBuilder builder = new TopologyBuilder();
         builder.setSpout("ImageSpout", new ImageSpout(), 1);
-        builder.setBolt("NudityBolt", new NudityBolt(), 1).allGrouping("ImageSpout", "images");
-        builder.setBolt("MutilationBolt", new MutilationBolt(), 1).allGrouping("ImageSpout", "images");
+        builder.setBolt("preprocessingBolt", new PreProcessingBolt(), 1).shuffleGrouping("ImageSpout");
+        builder.setBolt("downloadBolt", new DownloadImageBolt(), 1).shuffleGrouping( "preprocessingBolt", "imageStream");
+        builder.setBolt("nudityBolt", new NudityBolt(), 1).allGrouping("downloadBolt");
+        //builder.setBolt("mutilationBolt", new MutilationBolt(), 1).allGrouping("downloadBolt");
 
         Config conf = new Config();
         conf.put("path", "/tmp/images/");
@@ -37,7 +39,7 @@ public class Amica {
 
         if (args != null && args.length > 0) {
             //parallelism hint to set the number of workers
-            conf.setNumWorkers(3);
+            conf.setNumWorkers(5);
             //submit the topology
             StormSubmitter.submitTopology(args[0], conf, builder.createTopology());
         } //Otherwise, we are running locally

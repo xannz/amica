@@ -42,10 +42,10 @@ public class MutilationBolt extends BaseBasicBolt {
         try {
             exePath = stormConf.get("exePathMutilation").toString();
             process = new ProcessBuilder(exePath,
-                    "/home/sander/amica/misc/Components/Visics/Mutilation/ImageInterpretation2/data/GlobalParams_000-201_GMM000.h5",
-                    "/home/sander/amica/misc/Components/Visics/Mutilation/ImageInterpretation2/data/GlobalParams_000-201_GMM201.h5",
-                    "/home/sander/amica/misc/Components/Visics/Mutilation/ImageInterpretation2/data/LoadParamsLog.txt",
-                    "/home/sander/amica/misc/Components/Visics/Mutilation/ImageInterpretation2/results").start();
+                    "/tmp/Amica/Mutilation/ImageInterpretation2/data/GlobalParams_000-201_GMM000.h5",
+                    "/tmp/Amica/Mutilation/ImageInterpretation2/data/GlobalParams_000-201_GMM201.h5",
+                    "/tmp/Amica/Mutilation/ImageInterpretation2/data/LoadParamsLog.txt",
+                    "/tmp/Amica/Mutilation/ImageInterpretation2/results").start();
             br = new BufferedReader(new InputStreamReader(process.getInputStream()));
             bw = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
         } catch (IOException ex) {
@@ -77,17 +77,21 @@ public class MutilationBolt extends BaseBasicBolt {
             BufferedImage img = ImageIO.read(new ByteArrayInputStream(tuple.getBinaryByField("image")));
             String id = tuple.getStringByField("id");
 
-            String writeFilePath = "/tmp/results/tempMutilation.jpg";
+            System.out.println("Creating image");
+            String writeFilePath = "/tmp/Amica/Mutilation/ImageInterpretation2/results/tempMutilation.jpg";
             File writeFile = new File(writeFilePath);
             ImageIO.write(img, "jpg", writeFile);
-
+            System.out.println("Image created");
+            System.out.println("Writing to process");
             bw.write(writeFilePath + '\n');
             bw.flush();
-
+            
             String response = br.readLine();
-            System.out.println(response);
+            System.out.println("RESPONSE: "  + response);
 
             writeFile.delete();
+            
+            System.out.println("temp image deleted");
 
             /**
              * Class 201 == mutilation Class 0 == no flag

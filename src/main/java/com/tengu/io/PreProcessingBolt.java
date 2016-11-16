@@ -28,6 +28,8 @@ public class PreProcessingBolt extends BaseBasicBolt{
     }
 
     public void execute(Tuple tuple, BasicOutputCollector boc) {
+        System.out.println("TUPLE in PreProcessingBolt");
+        
         try {
             String json_tweet = tuple.getStringByField("message");            
             Tweet t = new Tweet();
@@ -39,16 +41,21 @@ public class PreProcessingBolt extends BaseBasicBolt{
             */
             if(t.mediaCount() > 0){
                 //Loop and check to see if really img
-                //if yes, emit url and id
-                
-                
+                //if yes, emit url and id                
+                for(String s : t.getMedia()){
+                    //if(s.matches(".*jpg$") || s.matches(".*png$") || s.matches(".*bmp$") || s.matches(".*jpeg$")){
+                    if(s.matches(".*jpg$")){
+                        System.out.println("Sending tuple to downloadbolt");
+                        boc.emit("imageStream", new Values(Long.toString(t.getId()), s));
+                    }
+                }                
             }
             /**
              * Test if tweet has text to analyze
              */
             if(! t.getText().equals("")){
                 //if yes, emit text and id
-                boc.emit(new Values( Long.toString(t.getId()),t.getText()));
+                boc.emit("textStream", new Values( Long.toString(t.getId()),t.getText()));
             }
         } catch (IOException ex) {
             Logger.getLogger(PreProcessingBolt.class.getName()).log(Level.SEVERE, null, ex);
