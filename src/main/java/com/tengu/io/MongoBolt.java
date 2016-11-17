@@ -43,13 +43,17 @@ public class MongoBolt extends BaseBasicBolt{
     }
 
     public void execute(Tuple tuple, BasicOutputCollector boc) {            
+        System.out.println("MONGOBOLT tuple received");
         try { 
-            String json = tuple.getStringByField("result");            
+            String json = tuple.getStringByField("result");  
+            System.out.println("MONGODB STORING");
+            System.out.println(json);          
             ObjectMapper mapper = new ObjectMapper();             
             Data d = mapper.readValue(json, Data.class);            
             String final_json = mapper.writeValueAsString(d);            
             String collection = "data";
             db.getCollection(collection).insertOne(Document.parse(final_json));
+            System.out.println("INSERTED");
         } catch (IOException ex) {
             Logger.getLogger(MongoBolt.class.getName()).log(Level.SEVERE, null, ex);
         }

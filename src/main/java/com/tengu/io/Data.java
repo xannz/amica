@@ -15,6 +15,7 @@ public class Data {
     private String id;
     private String flag;
     private Long timestamp;
+    private String source;
     
     public Data(){
         timestamp = new Date().getTime();
@@ -26,10 +27,11 @@ public class Data {
         this.timestamp = new Date().getTime();
     }
     
-    public Data(String id, String flag, Long timestamp){
+    public Data(String id, String flag, Long timestamp, String source){
         this.id = id;
         this.flag = flag;
         this.timestamp = timestamp;
+        this.source = source;
     }
 
     /**
@@ -72,5 +74,19 @@ public class Data {
      */
     public void setTimestamp(Long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    /**
+     * @return the source
+     */
+    public String getSource() {
+        return source;
+    }
+
+    /**
+     * @param source the source to set
+     */
+    public void setSource(String source) {
+        this.source = source;
     }
 }

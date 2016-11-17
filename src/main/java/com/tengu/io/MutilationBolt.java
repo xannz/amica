@@ -68,7 +68,7 @@ public class MutilationBolt extends BaseBasicBolt {
     }
 
     public void declareOutputFields(OutputFieldsDeclarer ofd) {
-        ofd.declare(new Fields("results"));
+        ofd.declare(new Fields("result"));
     }
 
     public void execute(Tuple tuple, BasicOutputCollector boc) {
