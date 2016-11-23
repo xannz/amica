@@ -28,7 +28,7 @@ public class PreProcessingBolt extends BaseBasicBolt{
     }
 
     public void execute(Tuple tuple, BasicOutputCollector boc) {
-        System.out.println("TUPLE in PreProcessingBolt");
+        //System.out.println("TUPLE in PreProcessingBolt");
         
         try {
             String json_tweet = tuple.getStringByField("message");            
@@ -42,21 +42,21 @@ public class PreProcessingBolt extends BaseBasicBolt{
             if(t.mediaCount() > 0){
                 //Loop and check to see if really img
                 //if yes, emit url and id       
-                System.out.println("MEDIA FOUND");         
+                //System.out.println("MEDIA FOUND");         
                 for(String s : t.getMedia()){
                     //if(s.matches(".*jpg$") || s.matches(".*png$") || s.matches(".*bmp$") || s.matches(".*jpeg$")){
                     if(s.matches(".*jpg$") || s.matches(".*JPG$")){
                         //System.out.println("Sending tuple to downloadbolt");
-                        System.out.println("jpg FOUND");
+                        //System.out.println("jpg FOUND");
                         boc.emit("imageStream", new Values(Long.toString(t.getId()), s, "jpg"));
                     }else if(s.matches(".*png") || s.matches(".*PNG")){
-                        System.out.println("png FOUND");
+                        //System.out.println("png FOUND");
                         boc.emit("imageStream", new Values(Long.toString(t.getId()), s, "png"));
                     }else if(s.matches(".*bmp$") || s.matches(".*BMP$")){
-                        System.out.println("bmp FOUND");
+                        //System.out.println("bmp FOUND");
                         boc.emit("imageStream", new Values(Long.toString(t.getId()), s, "bmp"));
                     }else if(s.matches(".*jpeg$") || s.matches(".*JPEG$")){
-                        System.out.println("jpeg FOUND");
+                        //System.out.println("jpeg FOUND");
                         boc.emit("imageStream", new Values(Long.toString(t.getId()), s, "jpeg"));
                     }
                 }                
@@ -66,7 +66,7 @@ public class PreProcessingBolt extends BaseBasicBolt{
              */
             if(! t.getText().equals("")){
                 //if yes, emit text and id
-                System.out.println("text FOUND");
+                //System.out.println("text FOUND");
                 boc.emit("textStream", new Values( Long.toString(t.getId()),t.getText()));
             }
         } catch (IOException ex) {

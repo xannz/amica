@@ -28,31 +28,33 @@ import java.util.logging.Logger;
 public class ImageSpout extends BaseRichSpout {
 
     SpoutOutputCollector _collector;
-    String imagePath;
+    //String imagePath;
     Integer counter;
 
     public void open(Map map, TopologyContext tc, SpoutOutputCollector soc) {
         _collector = soc;
-        imagePath = map.get("path").toString();
+        //magePath = map.get("path").toString();
         counter = 1;
     }
 
     public void declareOutputFields(OutputFieldsDeclarer ofd) {
-        //ofd.declare(new Fields("image", "id"));
-        ofd.declare(new Fields("message"));
+        ofd.declare(new Fields("id", "text"));
+        //ofd.declare(new Fields("message"));
     }
 
     public void nextTuple() {
         Utils.sleep(3000); //Add artificial delay
         //try {
-            System.out.println("Reading image");
-            File fi = new File(imagePath + counter + ".jpg");
+            //System.out.println("Reading image");
+            //File fi = new File(imagePath + counter + ".jpg");
             
             //if (fi.exists() && !fi.isDirectory()) {
                 //byte[] fileContent = Files.readAllBytes(fi.toPath());
                 //counter++;
                 //System.out.println("Emitting byte array(" + counter + ")");
-                _collector.emit(new Values("{\"id\":795579924908273665,\"text\":\"#Calpe Guardia Civil verijdelt 2 zelfmoordpogingen https://t.co/32tn93XAiG\",\"createdAt\":1478516009000,\"language\":\"nl\",\"media\":[\"http://i.imgur.com/vGUbrPo.jpg\"],\"user\":\"Herwig Waterschoot\"}"));
+               // _collector.emit(new Values("{\"id\":795579924908273665,\"text\":\"#Calpe Guardia Civil verijdelt 2 zelfmoordpogingen https://t.co/32tn93XAiG\",\"createdAt\":1478516009000,\"language\":\"nl\",\"media\":[\"http://i.imgur.com/vGUbrPo.jpg\"],\"user\":\"Herwig Waterschoot\"}"));
+               System.out.println("EMMITING TUPLE FROM SPOUT");
+               _collector.emit(new Values("0001", "Dit is een voorbeeldzin"));
             //}
 
        // } catch (IOException ex) {

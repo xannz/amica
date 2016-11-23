@@ -38,17 +38,18 @@ public class DownloadImageBolt extends BaseBasicBolt {
     }
 
     public void declareOutputFields(OutputFieldsDeclarer ofd) {
-        ofd.declare(new Fields("id", "image", "imageExtension"));
+        ofd.declare(new Fields("id", "image", "imageExtension", "url"));
     }
 
     public void execute(Tuple tuple, BasicOutputCollector boc) {
         //extension of image might need to be emitted 
         String id = tuple.getStringByField("id");
         String extension = tuple.getStringByField("imageExtension");
+        String imageURL = tuple.getStringByField("imageURL");
         try {
-            byte[] imgBytes = downloadUrl(new URL(tuple.getStringByField("imageURL")));
+            byte[] imgBytes = downloadUrl(new URL(imageURL));
             if(imgBytes.length != 0){
-                boc.emit(new Values(id, imgBytes, extension));
+                boc.emit(new Values(id, imgBytes, extension, imageURL));
             }else{
                 System.out.println("ERROR DOWNLOADING IMAGE");
             }

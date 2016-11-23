@@ -25,24 +25,25 @@ public class Amica {
     public static void main(String[] args) throws Exception {
 
         TopologyBuilder builder = new TopologyBuilder();
-        builder.setSpout("ImageSpout", new ImageSpout(), 1);
-        builder.setBolt("preprocessingBolt", new PreProcessingBolt(), 1).shuffleGrouping("ImageSpout");
-        builder.setBolt("downloadBolt", new DownloadImageBolt(), 1).shuffleGrouping( "preprocessingBolt", "imageStream");
-        builder.setBolt("nudityBolt", new NudityBolt(), 1).allGrouping("downloadBolt");
+        builder.setSpout("Spout", new ImageSpout(), 1);
+        //builder.setBolt("preprocessingBolt", new PreProcessingBolt(), 1).shuffleGrouping("ImageSpout");
+        //builder.setBolt("downloadBolt", new DownloadImageBolt(), 1).shuffleGrouping( "preprocessingBolt", "imageStream");
+        //builder.setBolt("nudityBolt", new NudityBolt(), 1).allGrouping("downloadBolt");
         //builder.setBolt("mutilationBolt", new MutilationBolt(), 1).allGrouping("downloadBolt");
+        builder.setBolt("ClipsBolt", new ClipsBolt(), 1).shuffleGrouping("Spout");
 
         Config conf = new Config();
-        conf.put("path", "/tmp/images/");
-        conf.put("exePathNudity", "/home/sander/amica/misc/Components/Visics/Nudity/ImageInterpretation/src/ImageInterpretation");
-        conf.put("exePathMutilation", "/home/sander/amica/misc/Components/Visics/Mutilation/ImageInterpretation2/src/ImageInterpretation2");
+        //conf.put("path", "/tmp/images/");
+        //conf.put("exePathNudity", "/home/sander/amica/misc/Components/Visics/Nudity/ImageInterpretation/src/ImageInterpretation");
+        //conf.put("exePathMutilation", "/home/sander/amica/misc/Components/Visics/Mutilation/ImageInterpretation2/src/ImageInterpretation2");
         conf.setDebug(true);
 
-        if (args != null && args.length > 0) {
+        //if (args != null && args.length > 0) {
             //parallelism hint to set the number of workers
-            conf.setNumWorkers(5);
+            conf.setNumWorkers(4);
             //submit the topology
-            StormSubmitter.submitTopology(args[0], conf, builder.createTopology());
-        } //Otherwise, we are running locally
+            StormSubmitter.submitTopology("Amica", conf, builder.createTopology());
+        /*} //Otherwise, we are running locally
         else {
             //Cap the maximum number of executors that can be spawned
             //for a component to 3
@@ -55,6 +56,6 @@ public class Amica {
             Thread.sleep(20000);
             //shut down the cluster
             cluster.shutdown();
-        }
+        }*/
     }
 }

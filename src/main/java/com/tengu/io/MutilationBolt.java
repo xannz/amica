@@ -78,12 +78,9 @@ public class MutilationBolt extends BaseBasicBolt {
             String id = tuple.getStringByField("id");
             String extension = tuple.getStringByField("imageExtension");
 
-            System.out.println("Creating image");
             String writeFilePath = "/tmp/Amica/Mutilation/ImageInterpretation2/results/tempMutilation."+ extension;
             File writeFile = new File(writeFilePath);
             ImageIO.write(img, "jpg", writeFile);
-            System.out.println("Image created");
-            System.out.println("Writing to process");
             bw.write(writeFilePath + '\n');
             bw.flush();
             
@@ -92,16 +89,15 @@ public class MutilationBolt extends BaseBasicBolt {
 
             writeFile.delete();
             
-            System.out.println("temp image deleted");
 
             /**
              * Class 201 == mutilation Class 0 == no flag
              */
             String json;
             if (response.equals("201")) {
-                json = "{ \"id\": \"" + id + "\", \"flag\": \"mutilation\", \"source\": \"mutilation\" }";
+                json = "{ \"id\": \"" + id + "\", \"flag\": \"mutilation\", \"source\": \"mutilation\", \"info\": \""+ tuple.getStringByField("url") +"\" }";
             }else{
-                json = "{ \"id\": \""+ id +"\", \"flag\": \"none\", \"source\": \"mutilation\" }";
+                json = "{ \"id\": \""+ id +"\", \"flag\": \"none\", \"source\": \"mutilation\", \"info\": \""+ tuple.getStringByField("url") +"\" }";
             }
             System.out.println(json);
             boc.emit(new Values(json));

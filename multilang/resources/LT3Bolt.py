@@ -1,6 +1,7 @@
 import storm
 import sys
 import json as simplejson
+import time
 sys.path.append('/tmp/Amica/LT3/amica_demo/suicide')
 from pipeline import suicidality_pipeline as sp
 
@@ -11,7 +12,7 @@ def capture(f):
         import sys
         from cStringIO import StringIO
 
-        backup = sys.stdout
+        backup = sys.stdout       
 
         try:
             sys.stdout = StringIO()  
@@ -19,7 +20,7 @@ def capture(f):
             out = sys.stdout.getvalue()
         finally:
             sys.stdout.close()  
-            sys.stdout = backup 
+            sys.stdout = backup   
 
         return out 
 
@@ -29,7 +30,7 @@ def capture(f):
 def get_res(text):
     return sp.get_result(text)
 
-class LT3Bolt(storm.BasicBolt):	
+class LT3Bolt(storm.BasicBolt): 
 
     def initialize(self, conf, context):
         self._conf = conf;
@@ -38,9 +39,11 @@ class LT3Bolt(storm.BasicBolt):
 
     def process(self, tuple):
         id_tweet, text = tuple.values
+        storm.logInfo("LT3BOLTINFO")
         storm.logInfo(text)
-
-        json = get_res(text)
+        
+        json = get_res(text.encode('utf-8'))
+        
         ''.join(json)
         json = json.split('\n')[-2]        
         json_string = json.replace("'", '"')
@@ -48,6 +51,7 @@ class LT3Bolt(storm.BasicBolt):
         data = simplejson.loads(json_string)
         data['id'] = str(id_tweet)
         data['source'] = "LT3"
+        data['info'] = text
 
         if(data['relevance_boolean'] == 1 and data['severity_boolean'] == 1):
             data['flag'] = "LT3"           
@@ -57,9 +61,9 @@ class LT3Bolt(storm.BasicBolt):
         del data['relevance_boolean'] 
         del data['severity_boolean']
 
-        json_string = simplejson.dumps(data)
-        
-        storm.emit([json_string])         
+        json_string = simplejson.dumps(data)        
+
+        storm.emit([json_string])   
 
 
 LT3Bolt().run()

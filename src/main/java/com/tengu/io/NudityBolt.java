@@ -113,9 +113,9 @@ public class NudityBolt extends BaseBasicBolt {
              */
             String json;
             if (response.equals("2")) {
-                json = "{ \"id\": \"" + id + "\", \"flag\": \"nudity\", \"source\": \"nudity\" }";
+                json = "{ \"id\": \"" + id + "\", \"flag\": \"nudity\", \"source\": \"nudity\", \"info\": \""+ tuple.getStringByField("url") +"\" }";
             } else {
-                json = "{ \"id\": \"" + id + "\", \"flag\": \"none\", \"source\": \"nudity\" }";
+                json = "{ \"id\": \"" + id + "\", \"flag\": \"none\", \"source\": \"nudity\", \"info\": \""+ tuple.getStringByField("url") +"\" }";
             }
             boc.emit(new Values(json));
         } catch (IOException ex) {

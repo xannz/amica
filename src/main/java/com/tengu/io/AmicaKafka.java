@@ -35,7 +35,7 @@ public class AmicaKafka {
         SpoutConfig spoutConf = new SpoutConfig(hosts, kafka_topic, consumer_home, UUID.randomUUID().toString());
         spoutConf.scheme = new SchemeAsMultiScheme(new KafkaBoltKeyValueScheme());
         /**
-         * Change to allow kafka real-time use
+         * Comment to allow kafka real-time use
          */
         spoutConf.forceFromStart = true;
         spoutConf.startOffsetTime = kafka.api.OffsetRequest.EarliestTime();
@@ -51,7 +51,9 @@ public class AmicaKafka {
                 .allGrouping("downloadBolt");
         builder.setBolt("mutilationBolt", new MutilationBolt(), 1)
                 .allGrouping("downloadBolt");
-        builder.setBolt("LT3Bolt", new LT3Bolt(), 1)
+        builder.setBolt("LT3Bolt", new LT3Bolt(), 3)
+                .shuffleGrouping("preprocessingBolt", "textStream");
+        builder.setBolt("ClipsBolt", new ClipsBolt(), 1)
                 .shuffleGrouping("preprocessingBolt", "textStream");
         builder.setBolt("mongoBolt", new MongoBolt(), 1)
                 .shuffleGrouping("nudityBolt")
@@ -60,11 +62,12 @@ public class AmicaKafka {
 
         Config conf = new Config();
         conf.setDebug(true);
+        conf.setMaxSpoutPending(200);
         conf.put("mongo.ip", mongo_ip);
         conf.put("mongo.port", mongo_port);
         conf.put("exePathMutilation", "/tmp/Amica/Mutilation/ImageInterpretation2/src/ImageInterpretation2");
         conf.put("exePathNudity", "/tmp/Amica/Nudity/ImageInterpretation/src/ImageInterpretation");
-        conf.setNumWorkers(8);
+        conf.setNumWorkers(10);
 
         StormSubmitter.submitTopology("Amica", conf, builder.createTopology());
     }
