@@ -12,17 +12,17 @@ def capture(f):
         import sys
         from cStringIO import StringIO
 
-        backup = sys.stdout       
+        backup = sys.stdout
 
         try:
-            sys.stdout = StringIO()  
+            sys.stdout = StringIO()
             f(*args, **kwargs)
             out = sys.stdout.getvalue()
         finally:
-            sys.stdout.close()  
-            sys.stdout = backup   
+            sys.stdout.close()
+            sys.stdout = backup
 
-        return out 
+        return out
 
     return captured
 
@@ -45,7 +45,7 @@ class LT3Bolt(storm.BasicBolt):
         json = get_res(text.encode('utf-8'))
         
         ''.join(json)
-        json = json.split('\n')[-2]        
+        json = json.split('\n')[-2]
         json_string = json.replace("'", '"')
         
         data = simplejson.loads(json_string)
@@ -54,16 +54,16 @@ class LT3Bolt(storm.BasicBolt):
         data['info'] = text
 
         if(data['relevance_boolean'] == 1 and data['severity_boolean'] == 1):
-            data['flag'] = "LT3"           
+            data['flag'] = "LT3"
         else:
             data['flag'] = "none"
             
         del data['relevance_boolean'] 
         del data['severity_boolean']
 
-        json_string = simplejson.dumps(data)        
+        json_string = simplejson.dumps(data)
 
-        storm.emit([json_string])   
+        storm.emit([json_string])
 
 
 LT3Bolt().run()

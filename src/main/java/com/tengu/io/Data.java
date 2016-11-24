@@ -5,18 +5,24 @@
  */
 package com.tengu.io;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.util.Date;
 
 /**
  *
  * @author sander
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Data {
     private String id;
     private String flag;
     private Long timestamp;
     private String source;
     private String info;
+    private String age;
+    private String gnd;
+    private double age_acc;
+    private double gnd_acc;
     
     public Data(){
         timestamp = new Date().getTime();
@@ -34,6 +40,19 @@ public class Data {
         this.timestamp = timestamp;
         this.source = source;
         this.info = info;
+    }
+    
+    public Data(String id, String flag, Long timestamp, String source, String info,
+            String gnd, double gnd_acc, String age, double age_acc){
+        this.id = id;
+        this.flag = flag;
+        this.timestamp = timestamp;
+        this.source = source;
+        this.info = info;
+        this.gnd = gnd;
+        this.gnd_acc = gnd_acc;
+        this.age = age;
+        this.age_acc = age_acc;
     }
 
     /**
@@ -104,5 +123,61 @@ public class Data {
      */
     public void setInfo(String info) {
         this.info = info;
+    }
+
+    /**
+     * @return the age
+     */
+    public String getAge() {
+        return age;
+    }
+
+    /**
+     * @param age the age to set
+     */
+    public void setAge(String age) {
+        this.age = age;
+    }
+
+    /**
+     * @return the gnd
+     */
+    public String getGnd() {
+        return gnd;
+    }
+
+    /**
+     * @param gnd the gnd to set
+     */
+    public void setGnd(String gnd) {
+        this.gnd = gnd;
+    }
+
+    /**
+     * @return the age_acc
+     */
+    public double getAge_acc() {
+        return age_acc;
+    }
+
+    /**
+     * @param age_acc the age_acc to set
+     */
+    public void setAge_acc(double age_acc) {
+        this.age_acc = age_acc;
+    }
+
+    /**
+     * @return the gnd_acc
+     */
+    public double getGnd_acc() {
+        return gnd_acc;
+    }
+
+    /**
+     * @param gnd_acc the gnd_acc to set
+     */
+    public void setGnd_acc(double gnd_acc) {
+        this.gnd_acc = gnd_acc;
     }
 }

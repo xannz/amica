@@ -100,8 +100,11 @@ public class NudityBolt extends BaseBasicBolt {
 
             String writeFilePath = "/tmp/Amica/Nudity/ImageInterpretation/results/tempNudity." + extension;
             File writeFile = new File(writeFilePath);
-            ImageIO.write(img, "jpg", writeFile);
-
+            System.out.println(writeFilePath);
+            System.out.println(tuple.getStringByField("url"));
+            System.out.println(extension);
+            ImageIO.write(img, extension, writeFile);
+            
             bw.write(writeFilePath + '\n');
             bw.flush();
             String response = br.readLine();

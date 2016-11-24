@@ -80,7 +80,9 @@ public class MutilationBolt extends BaseBasicBolt {
 
             String writeFilePath = "/tmp/Amica/Mutilation/ImageInterpretation2/results/tempMutilation."+ extension;
             File writeFile = new File(writeFilePath);
-            ImageIO.write(img, "jpg", writeFile);
+            System.out.println(tuple.getStringByField("url"));
+            //ImageIO.write(img, extension, writeFile);
+            ImageIO.write(img, extension, writeFile);
             bw.write(writeFilePath + '\n');
             bw.flush();
             
