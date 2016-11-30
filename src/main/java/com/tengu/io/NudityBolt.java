@@ -51,37 +51,8 @@ public class NudityBolt extends BaseBasicBolt {
                      "/tmp/Amica/Nudity/ImageInterpretation/data/GlobalParams.h5",                       
                      "/tmp/Amica/Nudity/ImageInterpretation/data/LoadParamsLog",                      
                      "/tmp/Amica/Nudity/ImageInterpretation/results").start();
-                    //"/home/sander/amica/misc/Components/Visics/Nudity/ImageInterpretation/data/GlobalParams.h5",
-                    //"/home/sander/amica/misc/Components/Visics/Nudity/ImageInterpretation/data/LoadParamsLog",
-                    //"/home/sander/amica/misc/Components/Visics/Nudity/ImageInterpretation/results").start();
             br = new BufferedReader(new InputStreamReader(process.getInputStream()));
             bw = new BufferedWriter(new OutputStreamWriter(process.getOutputStream()));
-            //inheritIO(process.getErrorStream(), System.err);
-        } catch (IOException ex) {
-            Logger.getLogger(NudityBolt.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    /*
-    private void inheritIO(final InputStream src, final PrintStream dest) {
-    new Thread(new Runnable() {
-        public void run() {
-            Scanner sc = new Scanner(src);
-            while (sc.hasNextLine()) {
-                dest.println(sc.nextLine());
-            }
-        }
-    }).start();
-}   */
-
-    /**
-     * Only called when topology is deployed on local cluster
-     */
-    @Override
-    public void cleanup() {
-        try {
-            br.close();
-            bw.close();
-            process.destroy();
         } catch (IOException ex) {
             Logger.getLogger(NudityBolt.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -94,22 +65,29 @@ public class NudityBolt extends BaseBasicBolt {
     public void execute(Tuple tuple, BasicOutputCollector boc) {
         System.out.println("Incoming tuple (NudityBolt)");
         try {
-            BufferedImage img = ImageIO.read(new ByteArrayInputStream(tuple.getBinaryByField("image")));
-            String id = tuple.getStringByField("id");
+            String writeFilePath;
             String extension = tuple.getStringByField("imageExtension");
+            String id = tuple.getStringByField("id");
+            if (tuple.getStringByField("url").equals("mutilation")) {
+                writeFilePath = "/tmp/Amica/Mutilation/ImageInterpretation2/data/1.jpg";
+            } else if (tuple.getStringByField("url").equals("nudity")) {
+                writeFilePath = "/tmp/Amica/Nudity/ImageInterpretation/data/1.jpg";
+            } else {
+                BufferedImage img = ImageIO.read(new ByteArrayInputStream(tuple.getBinaryByField("image")));
+                writeFilePath = "/tmp/Amica/Nudity/ImageInterpretation/results/tempNudity." + extension;
+                File writeFile = new File(writeFilePath);
+                ImageIO.write(img, extension, writeFile);
+            }
 
-            String writeFilePath = "/tmp/Amica/Nudity/ImageInterpretation/results/tempNudity." + extension;
-            File writeFile = new File(writeFilePath);
-            System.out.println(writeFilePath);
-            System.out.println(tuple.getStringByField("url"));
-            System.out.println(extension);
-            ImageIO.write(img, extension, writeFile);
-            
             bw.write(writeFilePath + '\n');
             bw.flush();
-            String response = br.readLine();
-            writeFile.delete();
 
+            String response = br.readLine();
+            //System.out.println("RESPONSE: " + response);
+            if (!tuple.getStringByField("url").equals("mutilation") && !tuple.getStringByField("url").equals("nudity")) {
+                File deleteFile = new File("/tmp/Amica/Nudity/ImageInterpretation/results/tempNudity." + extension);
+                deleteFile.delete();
+            }
 
             /**
              * Class 2 == nudity Class 1 == no flag

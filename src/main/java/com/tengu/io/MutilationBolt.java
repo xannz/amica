@@ -74,37 +74,43 @@ public class MutilationBolt extends BaseBasicBolt {
     public void execute(Tuple tuple, BasicOutputCollector boc) {
         System.out.println("Incoming tuple (MutilationBolt)");
         try {
-            BufferedImage img = ImageIO.read(new ByteArrayInputStream(tuple.getBinaryByField("image")));
-            String id = tuple.getStringByField("id");
+            String writeFilePath;
             String extension = tuple.getStringByField("imageExtension");
+            String id = tuple.getStringByField("id");
+            if (tuple.getStringByField("url").equals("mutilation")) {
+                writeFilePath = "/tmp/Amica/Mutilation/ImageInterpretation2/data/1.jpg";
+            } else if (tuple.getStringByField("url").equals("nudity")) {
+                writeFilePath = "/tmp/Amica/Nudity/ImageInterpretation/data/1.jpg";
+            } else {
+                BufferedImage img = ImageIO.read(new ByteArrayInputStream(tuple.getBinaryByField("image")));
+                writeFilePath = "/tmp/Amica/Mutilation/ImageInterpretation2/results/tempMutilation." + extension;
+                File writeFile = new File(writeFilePath);
+                ImageIO.write(img, extension, writeFile);
+            }
 
-            String writeFilePath = "/tmp/Amica/Mutilation/ImageInterpretation2/results/tempMutilation."+ extension;
-            File writeFile = new File(writeFilePath);
-            System.out.println(tuple.getStringByField("url"));
-            //ImageIO.write(img, extension, writeFile);
-            ImageIO.write(img, extension, writeFile);
             bw.write(writeFilePath + '\n');
             bw.flush();
-            
-            String response = br.readLine();
-            System.out.println("RESPONSE: "  + response);
 
-            writeFile.delete();
-            
+            String response = br.readLine();
+            //System.out.println("RESPONSE: " + response);
+            if (!tuple.getStringByField("url").equals("mutilation") && !tuple.getStringByField("url").equals("nudity")) {
+                File deleteFile = new File("/tmp/Amica/Mutilation/ImageInterpretation2/results/tempMutilation." + extension);
+                deleteFile.delete();
+            }
 
             /**
              * Class 201 == mutilation Class 0 == no flag
              */
             String json;
             if (response.equals("201")) {
-                json = "{ \"id\": \"" + id + "\", \"flag\": \"mutilation\", \"source\": \"mutilation\", \"info\": \""+ tuple.getStringByField("url") +"\" }";
-            }else{
-                json = "{ \"id\": \""+ id +"\", \"flag\": \"none\", \"source\": \"mutilation\", \"info\": \""+ tuple.getStringByField("url") +"\" }";
+                json = "{ \"id\": \"" + id + "\", \"flag\": \"mutilation\", \"source\": \"mutilation\", \"info\": \"" + tuple.getStringByField("url") + "\" }";
+            } else {
+                json = "{ \"id\": \"" + id + "\", \"flag\": \"none\", \"source\": \"mutilation\", \"info\": \"" + tuple.getStringByField("url") + "\" }";
             }
-            System.out.println(json);
+            //System.out.println(json);
             boc.emit(new Values(json));
         } catch (IOException ex) {
-            Logger.getLogger(NudityBolt.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(MutilationBolt.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

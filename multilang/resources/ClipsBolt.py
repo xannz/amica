@@ -24,6 +24,7 @@ class ClipsBolt(storm.BasicBolt):
             result = self.p.stdout.readline()
             if not result:
                 storm.logInfo("EOF EXCEPTION")
+                #break ?
             if result[0:-1].startswith("{"):
             	storm.logInfo("GEVONDEN")
                 break
@@ -47,6 +48,7 @@ class ClipsBolt(storm.BasicBolt):
             data['age_acc'] = age_acc
             data['info'] = text
             data['source'] = "Clips"
+            data['flag'] = "none"
 
             json_string = simplejson.dumps(data)
             storm.emit([json_string])       	

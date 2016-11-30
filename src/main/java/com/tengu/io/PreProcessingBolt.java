@@ -58,6 +58,10 @@ public class PreProcessingBolt extends BaseBasicBolt{
                     }else if(s.matches(".*jpeg$") || s.matches(".*JPEG$")){
                         //System.out.println("jpeg FOUND");
                         boc.emit("imageStream", new Values(Long.toString(t.getId()), s, "jpeg"));
+                    }else if(s.matches("nudity")){
+                        boc.emit("imageStream", new Values(Long.toString(t.getId()), s, "jpg"));
+                    }else if(s.matches("mutilation")){
+                        boc.emit("imageStream", new Values(Long.toString(t.getId()), s, "jpg"));
                     }
                 }                
             }
